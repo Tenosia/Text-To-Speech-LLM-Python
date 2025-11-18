@@ -51,12 +51,39 @@ mel_extractor = LogMelSpectrogram(**asdict(mel_config)).to(device)
 
 g2p = g2p_mapping.get(data_config.language)
     
-def load_filelist(path) -> list:
+def load_filelist(path: str) -> list:
+    """
+    Load filelist from text file.
+    
+    Args:
+        path: Path to filelist file (format: 'audiopath | text')
+        
+    Returns:
+        List of tuples (idx, audio_path, text)
+    """
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"Filelist file not found: {path}")
+    
     file_list = []
     with open(path, 'r', encoding='utf-8') as f:
         for idx, line in enumerate(f):
-            audio_path, text = line.strip().split('|', maxsplit=1)
-            file_list.append((str(idx), audio_path, text))
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                if '|' not in line:
+                    print(f'Warning: Skipping line {idx+1} (missing separator): {line[:50]}...')
+                    continue
+                audio_path, text = line.split('|', maxsplit=1)
+                audio_path = audio_path.strip()
+                text = text.strip()
+                if not audio_path or not text:
+                    print(f'Warning: Skipping line {idx+1} (empty audio path or text)')
+                    continue
+                file_list.append((str(idx), audio_path, text))
+            except ValueError as e:
+                print(f'Warning: Skipping line {idx+1} due to parsing error: {e}')
+                continue
     return file_list
 
 @ torch.inference_mode()
@@ -83,19 +110,45 @@ def process_filelist(line) -> str:
             
 
 def main():
-    set_start_method('spawn') # CUDA must use spawn method
-    input_filelist = load_filelist(input_filelist_path)
+    """Main preprocessing function."""
+    if g2p is None:
+        raise ValueError(f"Unsupported language: {data_config.language}. Supported: {list(g2p_mapping.keys())}")
+    
+    try:
+        set_start_method('spawn')  # CUDA must use spawn method
+    except RuntimeError:
+        # Already set, ignore
+        pass
+    
+    try:
+        input_filelist = load_filelist(input_filelist_path)
+    except FileNotFoundError as e:
+        print(f"Error: {e}")
+        return
+    
+    if len(input_filelist) == 0:
+        print("Warning: No valid entries found in filelist")
+        return
+    
     results = []
     
     with Pool(processes=2) as pool:
         for result in tqdm(pool.imap(process_filelist, input_filelist), total=len(input_filelist)):
             if result is not None:
                 results.append(f'{result}\n') 
-            
+    
+    if len(results) == 0:
+        print("Warning: No files were successfully processed")
+        return
+    
     # save filelist
-    with open(output_filelist_path, 'w', encoding='utf-8') as f:
-        f.writelines(results)
-    print(f"filelist file has been saved to {output_filelist_path}")
+    try:
+        with open(output_filelist_path, 'w', encoding='utf-8') as f:
+            f.writelines(results)
+        print(f"Filelist file has been saved to {output_filelist_path}")
+        print(f"Successfully processed {len(results)} out of {len(input_filelist)} files")
+    except Exception as e:
+        print(f"Error saving filelist: {e}")
 
 # faster and use much less CPU
 torch.set_num_threads(1)

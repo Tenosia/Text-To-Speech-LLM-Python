@@ -114,7 +114,7 @@ class StableTTS(nn.Module):
     def forward(self, x, x_lengths, y, y_lengths, z, z_lengths):
         """
         Computes 3 losses:
-            1. duration loss: loss between predicted token durations and those extracted by Monotinic Alignment Search (MAS).
+            1. duration loss: loss between predicted token durations and those extracted by Monotonic Alignment Search (MAS).
             2. prior loss: loss between mel-spectrogram and encoder outputs.
             3. flow matching loss: loss between mel-spectrogram and decoder outputs.
 
@@ -127,7 +127,7 @@ class StableTTS(nn.Module):
                 shape: (batch_size, n_feats, max_mel_length)
             y_lengths (torch.Tensor): lengths of mel-spectrograms in batch.
                 shape: (batch_size,)
-            z (torch.Tensor): batch of cliced mel-spectrograms.
+            z (torch.Tensor): batch of sliced mel-spectrograms.
                 shape: (batch_size, n_feats, max_mel_length)
             z_lengths (torch.Tensor): lengths of sliced mel-spectrograms in batch.
                 shape: (batch_size,)
