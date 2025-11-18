@@ -1,15 +1,3 @@
-<div align="center">
-
-# StableTTS
-
-Next-generation TTS model using flow-matching and DiT, inspired by [Stable Diffusion 3](https://stability.ai/news/stable-diffusion-3).
-
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-orange.svg)](https://pytorch.org/)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-
-</div>
-
 ## Table of Contents
 
 - [Introduction](#introduction)
@@ -34,11 +22,11 @@ Next-generation TTS model using flow-matching and DiT, inspired by [Stable Diffu
 
 ### Key Highlights
 
-- 🚀 **Fast Inference**: Efficient flow-matching decoder with configurable ODE solvers
-- 🌍 **Multilingual Support**: Chinese, English, and Japanese in a single checkpoint
-- 🎯 **High Quality**: CFG (Classifier-Free Guidance) support for improved audio quality
-- 🔧 **Easy to Use**: Simple API and Gradio web interface
-- 📦 **Lightweight**: Only 31M parameters, suitable for deployment
+- **Fast Inference**: Efficient flow-matching decoder with configurable ODE solvers
+- **Multilingual Support**: Chinese, English, and Japanese in a single checkpoint
+- **High Quality**: CFG (Classifier-Free Guidance) support for improved audio quality
+- **Easy to Use**: Simple API and Gradio web interface
+- **Lightweight**: Only 31M parameters, suitable for deployment
 
 ## Features
 
@@ -54,9 +42,9 @@ Next-generation TTS model using flow-matching and DiT, inspired by [Stable Diffu
 
 **2024/10**: A new autoregressive TTS model is coming soon...
 
-**2024/9**: 🚀 **StableTTS V1.1 Released** ⭐ Audio quality is largely improved ⭐
+**2024/9**: **StableTTS V1.1 Released** Audio quality is largely improved
 
-⭐ **V1.1 Release Highlights:**
+**V1.1 Release Highlights:**
 
 - Fixed critical issues that cause the audio quality being much lower than expected. (Mainly in Mel spectrogram and Attention mask)
 - Introduced U-Net-like long skip connections to the DiT in the Flow-matching Decoder.
@@ -479,13 +467,3 @@ The development of our models heavily relies on insights and code from various p
 ## Disclaimer
 
 Any organization or individual is prohibited from using any technology in this repo to generate or edit someone's speech without his/her consent, including but not limited to government leaders, political figures, and celebrities. If you do not comply with this item, you could be in violation of copyright laws.
-
----
-
-<div align="center">
-
-**⭐ If you find this project useful, please consider giving it a star! ⭐**
-
-✨ **Huggingface demo:** [🤗](https://huggingface.co/spaces/KdaiP/StableTTS1.1)
-
-</div>
